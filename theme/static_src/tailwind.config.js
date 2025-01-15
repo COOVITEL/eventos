@@ -15,6 +15,9 @@ module.exports = {
         extend: {
             backgroundColor : {
                 'blueCoovitel': '#262D63'
+            },
+            textColor: {
+                'blueCoovitel': '#262D63'
             }
         },
     },

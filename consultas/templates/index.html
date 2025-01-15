@@ -2,8 +2,175 @@
 
 {% block content %}
 
-    <h1 class="text-3xl text-blue-500">
-        App eventos
-    </h1>
+<div class="max-h-screen bg-gray-100 py-10">
+
+    {% if messages %}
+        <div class="absolute top-36 right-10" id="alert-message">
+            {% for message in messages %}
+                <div 
+                    class="
+                    p-4 mb-4 text-sm rounded-lg 
+                    {% if message.tags == 'success' %} text-xl bg-green-100 text-green-700 border-2 border-green-700 shadow-2xl {% endif %}
+                    {% if message.tags == 'error' %} text-xl bg-red-100 text-red-700 border-2 border-red-700 shadow-2xl {% endif %}
+                    {% if message.tags == 'info' %} text-xl bg-blue-100 text-blue-700 border-2 border-blue-700 shadow-2xl {% endif %}
+                ">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if asociado.state %}
+        <div class="absolute w-screen h-screen top-0 flex items-center justify-center">
+            <div class="w-full h-full bg-black/50 brightness-75"></div>
+            {% if asociado.asociado.state == "HÁBIL" %}
+                <div class="absolute top-32 z-50 bg-gray-100 w-[500px] h-[250px] rounded-lg shadow-2xl border-[3px] border-green-400">
+                    <a class="absolute top-3 right-3" href="{% url 'close' %}">
+                        {% include "close.html" %}
+                    </a>
+                    <div class="flex flex-col gap-3 mt-2 p-4">
+                        <h2 class="text-blueCoovitel font-semibold text-2xl">Entrega Obsequio 2025</h2>
+                        <div class="h-1 w-full bg-green-400"></div>
+                        <p class="text-lg"><span class="font-semibold">Asociado:</span> {{asociado.asociado.name}}</p>
+                        <p class="text-lg">{{asociado.asociado.description}}</p>
+                    </div>
+                    <div class="absolute bottom-5 right-5 flex flex-row gap-4">
+                        <a href="{% url 'close' %}" class=" bg-red-300 text-white px-8 py-2 rounded-md hover:bg-red-800 transition-all duration-200">
+                            Cancelar
+                        </a>
+
+                        <form method="POST" id="form_entrega">
+                            {% csrf_token %}
+                            <input type="hidden" name="form_id" value="form_entrega">
+                            <button id="entrega" type="submit" class="bg-blue-300 text-white px-8 py-2 rounded-md hover:bg-blueCoovitel transition-all duration-200">
+                                Entregar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            {% else %}
+            <div class="absolute top-32 z-50 bg-gray-100 w-[700px] h-[450px] rounded-lg shadow-2xl border-[3px] border-red-400">
+                <a class="absolute top-3 right-3" href="{% url 'close' %}">
+                    {% include "close.html" %}
+                </a>
+                <div class="flex flex-col gap-3 mt-2 p-4">
+                    <h2 class="text-blueCoovitel font-semibold text-2xl">Entrega Obsequio 2025</h2>
+                    <div class="h-1 w-full bg-red-400"></div>
+                    <p class="text-lg"><span class="font-semibold">Asociado:</span> {{asociado.asociado.name}}</p>
+                    <p><span class="font-semibold">Estado:</span> {{asociado.asociado.state}} - {{asociado.asociado.causa}}</p>
+                    <p class="text-lg"><span class="font-semibold">Obsequio: </span>{{asociado.asociado.description}}</p>
+                </div>
+                <form method="POST" id="form_entrega">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_id" value="form_entrega">
+
+                    <div class="px-10 flex flex-col gap-2">
+                        <label class="" for="">Ingresa los motivos por los cuales vas a realizar la entrega del obsequio.</label>
+                        <textarea name="razon" required class="w-full rounded-md" rows="4" cols="50" placeholder="Ingresa los motivos ..."></textarea>
+                    </div>
+                    <div class="absolute bottom-5 right-5 flex flex-row gap-4">
+                        
+                        <a href="{% url 'close' %}" class="bg-red-300 text-white px-8 py-2 rounded-md hover:bg-red-800 transition-all duration-200">
+                            Cancelar
+                        </a>
+                        
+                        <button id="entrega" type="submit" class="bg-blue-300 text-white px-8 py-2 rounded-md hover:bg-blueCoovitel transition-all duration-200">
+                            Entregar
+                        </button>
+                    </div>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    <div class="container mx-auto">
+
+        <h1 class="text-2xl font-bold text-center mb-8">Entrega Obsequios de Fidelización Año 2025</h1>
+        
+        <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-2xl p-10">
+            
+            <form method="POST" class="space-y-6" id="form-consulta">
+                {% csrf_token %}
+                <input type="hidden" name="form_id" value="form-consulta">
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Quien entrega (Coovitel)</label>
+                        <select required name="quien_entrega" class="mt-1 block w-full roundeJd-md border-gray-300 shadoJw-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            <option value="">Seleccione una opción</option>
+                            {% for asesor in asesores %}
+                                <option value={{asesor}}>{{asesor}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+            
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Medio entrega</label>
+                        <select required name="medio_entrega" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            <option value="">Seleccione una opción</option>
+                            {% for sucursal in sucursales %}
+                                <option value={{sucursal}}>{{sucursal}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+            
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Cédula (ASOCIADO)</label>
+                        <div class="mt-1 flex rounded-md shadow-sm">
+                            <input required type="number" name="cedula" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-l-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="flex justify-end space-x-4 mt-6">
+                    <button type="reset" class="px-4 py-2 text-sm font-medium text-red-600 hover:text-red-700">
+                        Limpiar
+                    </button>
+                    <button type="submit" id="buscar" class="disabled:cursor-not-allowed px-4 py-2 bg-gray-600 text-white text-sm font-medium rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                        Buscar
+                    </button>
+                </div>
+            </form>
+            
+        </div>
+
+        <div class="text-center text-sm text-gray-600 mt-8">
+            Copyright © 2021. Cooperativa Empresarial de Ahorro y Crédito – COOVITEL. Todos los derechos reservados.
+        </div>
+    </div>
+</div>
+
+<script>
+    const form = document.getElementById('form-consulta');
+    const submitButton = document.getElementById('buscar');
+
+    form.addEventListener('submit', function (event) {
+        // Agregar el atributo disabled al botón
+        submitButton.disabled = true;
+
+        // Cambiar el texto del botón (opcional)
+        submitButton.textContent = 'Buscando...';
+
+        // Permitir que el formulario se envíe
+    });
+
+    const formEntrega = document.getElementById('form_entrega');
+    const entregaButton = document.getElementById('entrega');
+
+    formEntrega.addEventListener('submit', function (event) {
+        entregaButton.disabled = true;
+        entregaButton.textContent = 'Entregando'
+    })
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const alertMessage = document.getElementById('alert-message');
+        if (alertMessage) {
+            setTimeout(() => {
+                alertMessage.classList.add('hidden');
+            }, 3000);
+        }
+    });
+</script>
 
 {% endblock content %}
