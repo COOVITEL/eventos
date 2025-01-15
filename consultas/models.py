@@ -1,5 +1,5 @@
 from django.db import models
-import pandas as pd
+from django.utils import timezone
 
 
 class EntregaObsequio(models.Model):
@@ -10,7 +10,7 @@ class EntregaObsequio(models.Model):
     obsequio = models.CharField(max_length=200)
     asesor = models.CharField(max_length=200)
     razonDeEntrega = models.CharField(max_length=1000, blank=True, null=True)
-    fecha = models.DateTimeField(auto_now_add=True)
+    fecha = models.DateTimeField(default=timezone.now)
     
     def __str__(self):
         return f"{self.nombre} - {self.documento} - {self.fecha}"

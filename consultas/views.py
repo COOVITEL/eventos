@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import EntregaObsequio, Sucursal, Asesor, Asociado
 from django.contrib import messages
+from django.utils.timezone import localtime
 
 
 def index(request):
@@ -19,8 +20,11 @@ def index(request):
             cedula = request.POST.get("cedula", "").strip()
             request.session['cedula'] = cedula
             
-            if EntregaObsequio.objects.filter(documento=cedula):
-                messages.info(request, "Ya se realizo la entrega del obsequio al Asociado.")
+            entrega = EntregaObsequio.objects.filter(documento=cedula)
+            if entrega:
+                fecha_local = str(localtime(entrega[0].fecha)).split(".")
+
+                messages.info(request, f"Ya se realizo la entrega a {entrega[0].nombre} el dia {fecha_local[0]} en {entrega[0].sucursal} por {entrega[0].asesor}.")
                 return render(request, 'index.html', {'sucursales': sucursales, 'asesores': asesores})
             
             # Reviso que exista

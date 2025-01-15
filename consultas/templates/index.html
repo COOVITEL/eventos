@@ -24,7 +24,7 @@
         <div class="absolute w-screen h-screen top-0 flex items-center justify-center">
             <div class="w-full h-full bg-black/50 brightness-75"></div>
             {% if asociado.state == "HÁBIL" %}
-                <div class="absolute top-32 z-50 bg-gray-100 w-[500px] h-[250px] rounded-lg shadow-2xl border-[3px] border-green-400">
+                <div class="absolute top-32 z-50 bg-gray-100 w-[500px] h-[300px] rounded-lg shadow-2xl border-[3px] border-green-400">
                     <a class="absolute top-3 right-3" href="{% url 'close' %}">
                         {% include "close.html" %}
                     </a>
@@ -33,6 +33,7 @@
                         <div class="h-1 w-full bg-green-400"></div>
                         <p class="text-lg"><span class="font-semibold">Asociado:</span> {{asociado.nombre}}</p>
                         <p class="text-lg">{{asociado.descripcion}}</p>
+                        <p class="text-sm text-gray-600">Recuerde solicitar documento original y el formato de actualización de datos</p>
                     </div>
                     <div class="absolute bottom-5 right-5 flex flex-row gap-4">
                         <a href="{% url 'close' %}" class=" bg-red-300 text-white px-8 py-2 rounded-md hover:bg-red-800 transition-all duration-200">
@@ -49,7 +50,7 @@
                     </div>
                 </div>
             {% else %}
-            <div class="absolute top-32 z-50 bg-gray-100 w-[700px] h-[450px] rounded-lg shadow-2xl border-[3px] border-red-400">
+            <div class="absolute top-32 z-50 bg-gray-100 w-[700px] h-[500px] rounded-lg shadow-2xl border-[3px] border-red-400">
                 <a class="absolute top-3 right-3" href="{% url 'close' %}">
                     {% include "close.html" %}
                 </a>
@@ -59,6 +60,7 @@
                     <p class="text-lg"><span class="font-semibold">Asociado:</span> {{asociado.nombre}}</p>
                     <p><span class="font-semibold">Estado:</span> {{asociado.state}} - {{asociado.causa}}</p>
                     <p class="text-lg"><span class="font-semibold">Obsequio: </span>{{asociado.descripcion}}</p>
+                    <p class="text-sm text-gray-600">Recuerde solicitar documento original y el formato de actualización de datos</p>
                 </div>
                 <form method="POST" id="form_entrega">
                     {% csrf_token %}
@@ -96,7 +98,7 @@
                 
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Quien entrega (Coovitel)</label>
+                        <label class="block text-sm font-medium text-gray-700">Quién entrega (Coovitel)</label>
                         <select required name="quien_entrega" class="mt-1 block w-full roundeJd-md border-gray-300 shadoJw-sm focus:border-indigo-500 focus:ring-indigo-500">
                             <option value="">Seleccione una opción</option>
                             {% for asesor in asesores %}
