@@ -1,4 +1,6 @@
 from django.db import models
+import pandas as pd
+
 
 class EntregaObsequio(models.Model):
     nombre = models.CharField(max_length=200)
@@ -22,5 +24,15 @@ class Asesor(models.Model):
 class Sucursal(models.Model):
     nombre = models.CharField(max_length=200)
 
+    def __str__(self):
+        return f"{self.nombre}"
+
+class Asociado(models.Model):
+    nombre = models.CharField(max_length=200)
+    documento = models.CharField(max_length=200)
+    state = models.CharField(max_length=100)
+    descripcion = models.CharField(max_length=500)
+    causa = models.CharField(max_length=200)
+    
     def __str__(self):
         return f"{self.nombre}"

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from .utils import getUsers
-from .models import EntregaObsequio, Sucursal, Asesor
+from .models import EntregaObsequio, Sucursal, Asesor, Asociado
 from django.contrib import messages
+
 
 def index(request):
     asociado = None
@@ -10,7 +10,7 @@ def index(request):
     if request.method == 'POST':
         form = request.POST.get("form_id")
         if form == "form-consulta":
-            asesor = request.POST.get("quien_entrega", "").strip()
+            asesor = request.POST.get("quien_entrega")
             request.session['asesor'] = asesor
             
             lugar = request.POST.get("medio_entrega", "").strip()
@@ -23,16 +23,16 @@ def index(request):
                 messages.info(request, "Ya se realizo la entrega del obsequio al Asociado.")
                 return render(request, 'index.html', {'sucursales': sucursales, 'asesores': asesores})
             
-            
-            asociado = getUsers(int(cedula))
-            if asociado['state'] == False:
+            # Reviso que exista
+            asociado = Asociado.objects.filter(documento=cedula)
+            if len(asociado) == 0:
                 messages.error(request, "No se encontro ningun asociado con ese numero de identificación.")
                 return render(request, 'index.html', {'sucursales': sucursales, 'asesores': asesores})
                 
             if asociado:
-                request.session['name'] = asociado['asociado']['name']
-                request.session['state'] = asociado['asociado']['state']
-                request.session['description'] = asociado['asociado']['description']
+                request.session['name'] = asociado[0].nombre
+                request.session['state'] = asociado[0].state
+                request.session['description'] = asociado[0].descripcion
             
         if form == "form_entrega":
             if request.POST.get("razon"):
@@ -61,7 +61,7 @@ def index(request):
             return render(request, 'index.html', {'sucursales': sucursales, 'asesores': asesores})
 
         return render(request, 'index.html', {
-                'asociado': asociado,
+                'asociado': asociado[0],
                 })
     return render(request, 'index.html', {'sucursales': sucursales, 'asesores': asesores})
 
