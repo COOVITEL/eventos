@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
-from .models import EntregaObsequio, Sucursal, Asesor, Asociado
+from .models import EntregaObsequio, Sucursal, Asesor, Asociados
 from django.contrib import messages
 from django.utils.timezone import localtime
-
+import pandas as pd
+from django.http import HttpResponse
+from .utils import setValue
 
 def index(request):
     asociado = None
@@ -27,16 +29,23 @@ def index(request):
                 messages.info(request, f"Ya se realizo la entrega a {entrega[0].nombre} el dia {fecha_local[0]} en {entrega[0].sucursal} por {entrega[0].asesor}.")
                 return render(request, 'index.html', {'sucursales': sucursales, 'asesores': asesores})
             
-            # Reviso que exista
-            asociado = Asociado.objects.filter(documento=cedula)
+            asociado = Asociados.objects.filter(documento=cedula)
             if len(asociado) == 0:
                 messages.error(request, "No se encontro ningun asociado con ese numero de identificación.")
                 return render(request, 'index.html', {'sucursales': sucursales, 'asesores': asesores})
-                
+            
+            if asociado[0].tipo == "EMPRESA":
+                messages.error(request, f"Lo sentimos {asociado[0].nombre}, los obsequios de fidelización no aplican para empresas.")
+                return render(request, 'index.html', {'sucursales': sucursales, 'asesores': asesores})
+
+            if asociado[0].obsequio == "NO CUMPLE ANTIGÜEDAD" and asociado[0].causa == "NO CUMPLE ANTIGÜEDAD":
+                messages.error(request, f"Lo sentimos {asociado[0].nombre}, no cumples con la antigüedad  mínima para aplicar a un obsequio.")
+                return render(request, 'index.html', {'sucursales': sucursales, 'asesores': asesores})
+            
             if asociado:
                 request.session['name'] = asociado[0].nombre
                 request.session['state'] = asociado[0].state
-                request.session['description'] = asociado[0].descripcion
+                request.session['description'] = asociado[0].obsequio
             
         if form == "form_entrega":
             if request.POST.get("razon"):
@@ -63,11 +72,38 @@ def index(request):
             messages.success(request, "Se ha registrado con éxito la entrega.")
             
             return render(request, 'index.html', {'sucursales': sucursales, 'asesores': asesores})
-
+        preaprobado = {
+            'prestamo': int(asociado[0].preaprobado) > 0,
+            'monto': setValue(asociado[0].preaprobado),
+            'cuota': setValue(asociado[0].cuota),
+            'plazo': asociado[0].plazo
+        }
         return render(request, 'index.html', {
                 'asociado': asociado[0],
+                'prestamo': preaprobado
                 })
     return render(request, 'index.html', {'sucursales': sucursales, 'asesores': asesores})
 
 def close(request):
     return redirect ('index')
+
+def seedUserus(request):
+    df = pd.read_excel('base.xlsx', sheet_name='Base Plataforma 15012024', skiprows=1)
+    asociados = df.values.tolist()
+    for asociado in asociados:
+        exist = Asociados.objects.filter(documento=asociado[0]).exists()
+        if not exist:
+            aso = Asociados(
+                documento=asociado[0],
+                nombre=asociado[1],
+                tipo=asociado[2],
+                obsequio=asociado[4],
+                state=asociado[5],
+                causa=asociado[6],
+                preaprobado=asociado[7],
+                cuota=asociado[8],
+                plazo=asociado[9]
+            )
+            aso.save()
+    return HttpResponse("Se crearon de forma correcta")
+

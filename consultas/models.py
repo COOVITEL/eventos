@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils import timezone
 
-
 class EntregaObsequio(models.Model):
     nombre = models.CharField(max_length=200)
     documento = models.CharField(max_length=200)
@@ -36,3 +35,18 @@ class Asociado(models.Model):
     
     def __str__(self):
         return f"{self.nombre}"
+
+class Asociados(models.Model):
+    documento = models.CharField(max_length=200)
+    nombre = models.CharField(max_length=200)
+    tipo=models.CharField(max_length=200)
+    obsequio = models.CharField(max_length=500)
+    state = models.CharField(max_length=100)
+    causa = models.CharField(max_length=200)
+    preaprobado = models.CharField(max_length=200)
+    cuota = models.CharField(max_length=200)
+    plazo = models.IntegerField()
+    
+    def __str__(self):
+        return f"{self.nombre} - {self.tipo}"
+

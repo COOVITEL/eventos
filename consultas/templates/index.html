@@ -24,7 +24,11 @@
         <div class="absolute w-screen h-screen top-0 flex items-center justify-center">
             <div class="w-full h-full bg-black/50 brightness-75"></div>
             {% if asociado.state == "HÁBIL" %}
-                <div class="absolute top-32 z-50 bg-gray-100 w-[500px] h-[300px] rounded-lg shadow-2xl border-[3px] border-green-400">
+                {% if prestamo.prestamo %}
+                    <div class="absolute top-32 z-50 bg-gray-100 w-[780px] h-[400px] rounded-lg shadow-2xl border-[3px] border-green-400">
+                {% else %}
+                    <div class="absolute top-32 z-50 bg-gray-100 w-[500px] h-[300px] rounded-lg shadow-2xl border-[3px] border-green-400">
+                {% endif %}
                     <a class="absolute top-3 right-3" href="{% url 'close' %}">
                         {% include "close.html" %}
                     </a>
@@ -32,7 +36,13 @@
                         <h2 class="text-blueCoovitel font-semibold text-2xl">Entrega Obsequio 2025</h2>
                         <div class="h-1 w-full bg-green-400"></div>
                         <p class="text-lg"><span class="font-semibold">Asociado:</span> {{asociado.nombre}}</p>
-                        <p class="text-lg">{{asociado.descripcion}}</p>
+                        <p class="text-lg"><span class="font-semibold">Obsequio:</span> {{asociado.obsequio}}</p>
+                        {% if prestamo.prestamo %}
+                            <p class="text-2xl text-blueCoovitel font-bold">Felicitaciones!</p>
+                            <p class="text-lg text-red-500 font-semibold">
+                                Tienes un preaprobado de $ {{ prestamo.monto }} con un valor de cuota de $ {{prestamo.cuota}} a un plazo de {{prestamo.plazo}}.
+                            </p>
+                        {% endif %}
                         <p class="text-sm text-gray-600">Recuerde solicitar documento original y el formato de actualización de datos</p>
                     </div>
                     <div class="absolute bottom-5 right-5 flex flex-row gap-4">
@@ -59,7 +69,7 @@
                     <div class="h-1 w-full bg-red-400"></div>
                     <p class="text-lg"><span class="font-semibold">Asociado:</span> {{asociado.nombre}}</p>
                     <p><span class="font-semibold">Estado:</span> {{asociado.state}} - {{asociado.causa}}</p>
-                    <p class="text-lg"><span class="font-semibold">Obsequio: </span>{{asociado.descripcion}}</p>
+                    <p class="text-lg"><span class="font-semibold">Obsequio: </span>{{asociado.obsequio}}</p>
                     <p class="text-sm text-gray-600">Recuerde solicitar documento original y el formato de actualización de datos</p>
                 </div>
                 <form method="POST" id="form_entrega">
@@ -97,6 +107,17 @@
                 <input type="hidden" name="form_id" value="form-consulta">
                 
                 <div class="space-y-4">
+   
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Medio entrega</label>
+                        <select required name="medio_entrega" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            <option value="">Seleccione una opción</option>
+                            {% for sucursal in sucursales %}
+                                <option value="{{sucursal}}">{{sucursal}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Quién entrega (Coovitel)</label>
                         <select required name="quien_entrega" class="mt-1 block w-full roundeJd-md border-gray-300 shadoJw-sm focus:border-indigo-500 focus:ring-indigo-500">
@@ -107,15 +128,6 @@
                         </select>
                     </div>
             
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Medio entrega</label>
-                        <select required name="medio_entrega" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                            <option value="">Seleccione una opción</option>
-                            {% for sucursal in sucursales %}
-                                <option value="{{sucursal}}">{{sucursal}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
             
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Cédula (ASOCIADO)</label>
