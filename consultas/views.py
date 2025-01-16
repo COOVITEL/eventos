@@ -2,14 +2,20 @@ from django.shortcuts import render, redirect
 from .models import EntregaObsequio, Sucursal, Asesor, Asociados
 from django.contrib import messages
 from django.utils.timezone import localtime
-import pandas as pd
-from django.http import HttpResponse
 from .utils import setValue
 
 def index(request):
     asociado = None
     sucursales = Sucursal.objects.all().order_by("nombre")
     asesores = Asesor.objects.all().order_by("nombre")
+    entregasTotales = [
+        {
+            'nombre': registro.nombre,
+            'numero_entregas': EntregaObsequio.objects.filter(sucursal=registro.nombre).count()
+        }
+        for registro in sucursales
+    ]
+    
     if request.method == 'POST':
         form = request.POST.get("form_id")
         if form == "form-consulta":
@@ -82,28 +88,28 @@ def index(request):
                 'asociado': asociado[0],
                 'prestamo': preaprobado
                 })
-    return render(request, 'index.html', {'sucursales': sucursales, 'asesores': asesores})
+    return render(request, 'index.html', {'sucursales': sucursales, 'asesores': asesores, 'entregas': entregasTotales})
 
 def close(request):
     return redirect ('index')
 
-def seedUserus(request):
-    df = pd.read_excel('base.xlsx', sheet_name='Base Plataforma 15012024', skiprows=1)
-    asociados = df.values.tolist()
-    for asociado in asociados:
-        exist = Asociados.objects.filter(documento=asociado[0]).exists()
-        if not exist:
-            aso = Asociados(
-                documento=asociado[0],
-                nombre=asociado[1],
-                tipo=asociado[2],
-                obsequio=asociado[4],
-                state=asociado[5],
-                causa=asociado[6],
-                preaprobado=asociado[7],
-                cuota=asociado[8],
-                plazo=asociado[9]
-            )
-            aso.save()
-    return HttpResponse("Se crearon de forma correcta")
+# def seedUserus(request):
+#     df = pd.read_excel('base.xlsx', sheet_name='Base Plataforma 15012024', skiprows=1)
+#     asociados = df.values.tolist()
+#     for asociado in asociados:
+#         exist = Asociados.objects.filter(documento=asociado[0]).exists()
+#         if not exist:
+#             aso = Asociados(
+#                 documento=asociado[0],
+#                 nombre=asociado[1],
+#                 tipo=asociado[2],
+#                 obsequio=asociado[4],
+#                 state=asociado[5],
+#                 causa=asociado[6],
+#                 preaprobado=asociado[7],
+#                 cuota=asociado[8],
+#                 plazo=asociado[9]
+#             )
+#             aso.save()
+#     return HttpResponse("Se crearon de forma correcta")
 

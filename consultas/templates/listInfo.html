@@ -1,0 +1,28 @@
+<button id="button-arrow" class="bg-blueCoovitel p-2 rounded-lg absolute bottom-[15%] right-2 transition-all duration-500">
+    {% include "icons/arrow.html" %}
+</button>
+
+<div id="datas" class="absolute top-[20%] p-5 right-5 rounded-xl shadow-moreBlack border-2 bg-blueCoovitel text-white translate-x-[360px] invisible transition-all duration-500">
+    <p class="text-3xl font-bold mb-5">Numero de Entregas</p>
+    <ul class="flex flex-col gap-2 w-full">
+        {% for entrega in entregas %}
+            <li class="w-full text-lg flex flex-row justify-between px-3">
+                <p class="font-semibold">{{ entrega.nombre }}</p>
+                <p>{{ entrega.numero_entregas }}</p>
+            </li>      
+        {% endfor %}
+    </ul>
+</div>
+
+<script>
+    const buttonArrow = document.getElementById('button-arrow')
+    const datas = document.getElementById('datas')
+
+    buttonArrow?.addEventListener('click', () => {
+        buttonArrow.classList.toggle('translate-x-[-360px]')
+        buttonArrow.classList.toggle('rotate-180')
+
+        datas?.classList.toggle('translate-x-[360px]')
+        datas?.classList.toggle('invisible')
+    })
+</script>

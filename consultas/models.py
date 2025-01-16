@@ -14,27 +14,29 @@ class EntregaObsequio(models.Model):
     def __str__(self):
         return f"{self.nombre} - {self.documento} - {self.fecha}"
 
-class Asesor(models.Model):
-    nombre = models.CharField(max_length=200)
-    
-    def __str__(self):
-        return f"{self.nombre}"
-
 class Sucursal(models.Model):
     nombre = models.CharField(max_length=200)
 
     def __str__(self):
         return f"{self.nombre}"
 
-class Asociado(models.Model):
+class Asesor(models.Model):
     nombre = models.CharField(max_length=200)
-    documento = models.CharField(max_length=200)
-    state = models.CharField(max_length=100)
-    descripcion = models.CharField(max_length=500)
-    causa = models.CharField(max_length=200)
+    sucursal = models.ForeignKey(Sucursal, blank=True, null=True, on_delete=models.CASCADE)
     
     def __str__(self):
-        return f"{self.nombre}"
+        return f"{self.nombre} {self.sucursal}"
+
+
+# class Asociado(models.Model):
+#     nombre = models.CharField(max_length=200)
+#     documento = models.CharField(max_length=200)
+#     state = models.CharField(max_length=100)
+#     descripcion = models.CharField(max_length=500)
+#     causa = models.CharField(max_length=200)
+    
+#     def __str__(self):
+#         return f"{self.nombre}"
 
 class Asociados(models.Model):
     documento = models.CharField(max_length=200)

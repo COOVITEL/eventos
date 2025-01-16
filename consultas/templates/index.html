@@ -2,7 +2,9 @@
 
 {% block content %}
 
-<div class="max-h-screen bg-gray-100 py-10">
+<div class="max-h-screen bg-back py-10">
+
+    {% include "listInfo.html" %}
 
     {% if messages %}
         <div class="absolute top-36 right-10" id="alert-message">
@@ -25,7 +27,7 @@
             <div class="w-full h-full bg-black/50 brightness-75"></div>
             {% if asociado.state == "HÁBIL" %}
                 {% if prestamo.prestamo %}
-                    <div class="absolute top-32 z-50 bg-gray-100 w-[780px] h-[400px] rounded-lg shadow-2xl border-[3px] border-green-400">
+                    <div class="absolute top-32 z-50 bg-gray-100 w-[810px] h-[400px] rounded-lg shadow-2xl border-[3px] border-green-400">
                 {% else %}
                     <div class="absolute top-32 z-50 bg-gray-100 w-[500px] h-[300px] rounded-lg shadow-2xl border-[3px] border-green-400">
                 {% endif %}
@@ -33,7 +35,7 @@
                         {% include "close.html" %}
                     </a>
                     <div class="flex flex-col gap-3 mt-2 p-4">
-                        <h2 class="text-blueCoovitel font-semibold text-2xl">Entrega Obsequio 2025</h2>
+                        <h2 class="text-blueCoovitel font-semibold text-2xl">Entrega Obsequio 2024</h2>
                         <div class="h-1 w-full bg-green-400"></div>
                         <p class="text-lg"><span class="font-semibold">Asociado:</span> {{asociado.nombre}}</p>
                         <p class="text-lg"><span class="font-semibold">Obsequio:</span> {{asociado.obsequio}}</p>
@@ -65,7 +67,7 @@
                     {% include "close.html" %}
                 </a>
                 <div class="flex flex-col gap-3 mt-2 p-4">
-                    <h2 class="text-blueCoovitel font-semibold text-2xl">Entrega Obsequio 2025</h2>
+                    <h2 class="text-blueCoovitel font-semibold text-2xl">Entrega Obsequio 2024</h2>
                     <div class="h-1 w-full bg-red-400"></div>
                     <p class="text-lg"><span class="font-semibold">Asociado:</span> {{asociado.nombre}}</p>
                     <p><span class="font-semibold">Estado:</span> {{asociado.state}} - {{asociado.causa}}</p>
@@ -98,7 +100,7 @@
 
     <div class="container mx-auto">
 
-        <h1 class="text-2xl font-bold text-center mb-8">Entrega Obsequios de Fidelización Año 2025</h1>
+        <h1 class="text-2xl font-bold text-center mb-8">Entrega Obsequios de Fidelización Año 2024</h1>
         
         <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-2xl p-10">
             
@@ -109,7 +111,7 @@
                 <div class="space-y-4">
    
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Medio entrega</label>
+                        <label class="block text-sm font-medium text-blueCoovitel">Medio entrega</label>
                         <select required name="medio_entrega" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                             <option value="">Seleccione una opción</option>
                             {% for sucursal in sucursales %}
@@ -119,7 +121,7 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Quién entrega (Coovitel)</label>
+                        <label class="block text-sm font-medium text-blueCoovitel">Quién entrega (Coovitel)</label>
                         <select required name="quien_entrega" class="mt-1 block w-full roundeJd-md border-gray-300 shadoJw-sm focus:border-indigo-500 focus:ring-indigo-500">
                             <option value="">Seleccione una opción</option>
                             {% for asesor in asesores %}
@@ -130,7 +132,7 @@
             
             
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">Cédula (ASOCIADO)</label>
+                        <label class="block text-sm font-medium text-blueCoovitel">Cédula (ASOCIADO)</label>
                         <div class="mt-1 flex rounded-md shadow-sm">
                             <input required type="number" name="cedula" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-l-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
                         </div>
@@ -150,7 +152,7 @@
         </div>
 
         <div class="text-center text-sm text-gray-600 mt-8">
-            Copyright © 2021. Cooperativa Empresarial de Ahorro y Crédito – COOVITEL. Todos los derechos reservados.
+            Copyright © 2025. Cooperativa Empresarial de Ahorro y Crédito - COOVITEL. Todos los derechos reservados.
         </div>
     </div>
 </div>
