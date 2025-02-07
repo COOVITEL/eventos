@@ -7,7 +7,7 @@ USER="dev2"
 GROUP="dev2"
 WORKERS=3
 DJANGOWSGI="eventos.wsgi"
-IP=192.168.***.***
+IP=192.168.***.***log
 PORT=8030
 LEVEL="debug"
 echo "Starting App Eventos"

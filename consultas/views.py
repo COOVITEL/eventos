@@ -10,6 +10,7 @@ def index(request):
     # Usa caché para reducir consultas repetitivas
     sucursales = cache.get('sucursales')
     
+
     if not sucursales:
         sucursales = list(Sucursal.objects.all().order_by("nombre"))
         cache.set('sucursales', sucursales, 3600)  # 1 hora
@@ -19,6 +20,13 @@ def index(request):
         asesores = list(Asesor.objects.all().order_by("nombre"))
         cache.set('asesores', asesores, 3600)  # 1 hora
     
+    entregasTotales = [
+        {
+            'nombre': registro.nombre,
+            'numero_entregas': EntregaObsequio.objects.filter(sucursal=registro.nombre).count()
+        }
+        for registro in sucursales
+    ]
     if request.method == 'POST':
         form = request.POST.get("form_id")
         
@@ -76,7 +84,7 @@ def index(request):
             except Exception as e:
                 messages.error(request, f"Ocurrió un error al registrar la entrega: {str(e)}")
             
-    return render(request, 'index.html', {'sucursales': sucursales, 'asesores': asesores})
+    return render(request, 'index.html', {'sucursales': sucursales, 'asesores': asesores, 'entregas': entregasTotales})
 # def index(request):
 #     asociado = None
 #     sucursales = Sucursal.objects.all().order_by("nombre")
