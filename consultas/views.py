@@ -9,7 +9,6 @@ from django.db import transaction
 def index(request):
     # Usa caché para reducir consultas repetitivas
     sucursales = cache.get('sucursales')
-    
 
     if not sucursales:
         sucursales = list(Sucursal.objects.all().order_by("nombre"))

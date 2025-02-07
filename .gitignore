@@ -3,3 +3,4 @@ theme
 obsequios1.xlsx
 base.xlsx
 db.sqlite3
+.deploy.sh
