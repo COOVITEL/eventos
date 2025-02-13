@@ -26,6 +26,10 @@ def index(request):
         }
         for registro in sucursales
     ]
+    entregasTotales.append({
+        'nombre': 'Total',
+        'numero_entregas': EntregaObsequio.objects.all().count()
+    })
     if request.method == 'POST':
         form = request.POST.get("form_id")
         
